@@ -1,20 +1,28 @@
-const db = require("../db/database");
+const { getAppointments } = require('../services/getAppointments');
 
-const getAppointments = async (req, res) => {
+const appointments = async (req, res) => {
     try {
-        const result = await db.query("Select * from Appointment");
+        const appointments = await getAppointments();
 
-        console.log(result.rows);
+        console.log(appointments);
 
         res.json({
-            appointments: result.rows,
+            success: true,
+            data: appointments,
+            error: null,
+            message: "Successfully fetched data"
         });
     } catch (error) {
         console.error(error);
-        res.status(500).send("Error fetching appointments!");
+        res.status(500).json({
+            success: false,
+            data: null,
+            error: error.message,
+            message: "Failed to fetch appointments!"
+        });
     }
 };
 
 module.exports = {
-    getAppointments,
+    appointments,
 };

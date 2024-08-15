@@ -1,13 +1,24 @@
-const { Pool } = require("pg");
-require("dotenv").config();
+require('dotenv').config();
+const pg = require("pg");
+
+const { Pool } = pg;
 
 const pool = new Pool({
     connectionString: process.env.POSTGRES_URL,
 });
 
-pool.connect((error) => {
-    if (error) throw error;
-    console.log("Connect to PostgreSQL successfully!");
-});
+const query = async (text, params) => {
+    try {
+        const response = await pool.query(text, params);
 
-module.exports = pool
+        return response;
+    } catch (error) {
+        console.error('Database query error:', error);
+        throw error;
+    }
+};
+
+module.exports = {
+    query,
+    pool,
+};
