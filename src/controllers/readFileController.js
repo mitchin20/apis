@@ -15,7 +15,7 @@ const readData = async (req, res) => {
         res.status(500).json({
             success: false,
             data: null,
-            error: error,
+            error: error.message,
             message: "Failed to read data from file"
         })
     }
