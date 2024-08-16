@@ -1,4 +1,3 @@
-const yup = require('yup');
 const { insertPortfolio } = require('../src/controllers/createPortfolioController');
 const { createPortfolio } = require('../src/services/createPortfolio');
 
