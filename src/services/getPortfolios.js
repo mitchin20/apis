@@ -9,7 +9,7 @@ const getPortfolios = async () => {
 
         return result.rows;
     } catch (error) {
-        throw new Error("Failed to fetch portfolios:", error.message);
+        throw new Error(`Failed to get portfolios: ${error.message}`);
     }
 }
 
