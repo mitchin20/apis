@@ -1,7 +1,9 @@
 const { insertPortfolio } = require('../src/controllers/createPortfolioController');
 const { createPortfolio } = require('../src/services/createPortfolio');
+const { getPortfolioByName } = require('../src/services/getPortfolioByName')
 
 jest.mock('../src/services/createPortfolio');
+jest.mock('../src/services/getPortfolioByName');
 
 describe('insertPortfolio Controller', () => {
     let req, res;
@@ -41,6 +43,27 @@ describe('insertPortfolio Controller', () => {
             message: "Successfully created new portfolio",
             error: null,
         })
+    });
+
+    it('should return 409 if record already existed', async () => {
+        getPortfolioByName.mockResolvedValue({
+            id: 1,
+            name: "Valid Portfolio Name"
+        })
+
+        await insertPortfolio(req, res);
+
+        expect(createPortfolio).not.toHaveBeenCalled();
+        expect(res.status).toHaveBeenCalledWith(409);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            success: false,
+            data: {
+                id: 1,
+                name: "Valid Portfolio Name",
+            },
+            message: "Portfolio name already existed",
+            error: null
+        }))
     });
 
     it('should return 500 if validation fails', async () => {
