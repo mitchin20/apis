@@ -18,7 +18,9 @@ const createPortfolio = async (data) => {
         emitter.emit('createdPortfolio', result.rows[0]);
         return result.rows[0];
     } catch (error) {
-        throw new Error(`Failed to create new portfolio: ${error.message}`);
+        const message = `Failed to create new portfolio: ${error.message}`;
+        emitter.emit('createdPortfolioError', message);
+        throw new Error(message);
     }
 }
 
