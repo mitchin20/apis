@@ -5,7 +5,8 @@ const updateData = async (data) => {
     try {
         const query = `
             UPDATE "portfolios"
-            SET name = $1
+            SET name = $1,
+                updated_at = CURRENT_TIMESTAMP
             WHERE portfolio_id = $2
             RETURNING *
         `
