@@ -18,6 +18,16 @@ const updatePortfolio = async (req, res) => {
         }
 
         const data = await updateData(reStructuredData);
+        if (!data) {
+            const message = `Unable to find record with id: ${id}`;
+            emitter.emit('updatedPortfolioError', message);
+            return res.status(404).json({
+                success: false,
+                data: null,
+                message,
+                error: null
+            })
+        }
 
         res.json({
             success: true,
