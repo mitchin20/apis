@@ -1,4 +1,5 @@
 const db = require('../db/database');
+const emitter = require('../../lib/emitter');
 
 const updateData = async (data) => {
     try {
@@ -12,10 +13,13 @@ const updateData = async (data) => {
         const values = [data.name, data.portfolio_id];
 
         const result = await db.query(query, values);
+        emitter.emit('updatedPortfolio', result.rows[0]);
 
         return result.rows[0];
     } catch (error) {
-        throw new Error(`Failed to update portfolio ${error.message}`)
+        const message = `Failed to update portfolio ${error.message}`
+        emitter.emit('updatedPortfolioError', message);
+        throw new Error(message);
     }
 }
 

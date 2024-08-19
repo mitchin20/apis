@@ -1,5 +1,6 @@
 const yup = require('yup');
 const { updateData } = require('../services/updatePortfolio');
+const emitter = require('../../lib/emitter');
 
 const schema = yup.object().shape({
     name: yup.string().min(3).required()
@@ -25,7 +26,9 @@ const updatePortfolio = async (req, res) => {
             error: null,
         });
     } catch (error) {
-        console.error("Failed to update record:", error.message);
+        const message = `Failed to update record: ${error.message}`;
+        emitter.emit("updatedPortfolioError", message);
+        console.error(message);
         res.status(500).json({
             success: false,
             data: null,

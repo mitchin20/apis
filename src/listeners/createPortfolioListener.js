@@ -1,5 +1,6 @@
-const db = require('../db/database');
+// Make sure to require this listener into the app.js
 const emitter = require('../../lib/emitter');
+const { createSsr } = require('../helpers/createSsr')
 
 emitter.on('createdPortfolio', async (portfolio) => {
     try {
@@ -31,7 +32,7 @@ emitter.on('createdPortfolioError', async (error) => {
             status: "failed",
             data: {
                 result: null,
-                error: error,
+                error,
             },
         }
 
@@ -42,18 +43,3 @@ emitter.on('createdPortfolioError', async (error) => {
         console.error("createdPortfolioError: Failed to create SSR log:", error.message);
     }
 });
-
-const createSsr = async (data) => {
-    try {
-        const columns = Object.keys(data).join(", ");
-        const values = Object.values(data);
-        const placeholders = values.map((_, index) => `$${index + 1}`).join(", ");
-
-        await db.query(`
-            INSERT INTO self_service_requests(${columns})
-            VALUES (${placeholders})
-        `, values);
-    } catch (error) {
-        throw new Error(`Create Portfolio Listener: Failed to create ssr: ${error.message}`);
-    }
-}
