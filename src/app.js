@@ -2,6 +2,7 @@ const express = require("express");
 const routes = require("./routes");
 const app = express();
 const db = require("./db/database");
+require("./listeners/createPortfolioListener");
 
 // Middleware
 app.use(express.json());

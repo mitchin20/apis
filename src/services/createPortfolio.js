@@ -1,4 +1,5 @@
 const db = require('../db/database');
+const emitter = require('../../lib/emitter');
 
 const createPortfolio = async (data) => {
     try {
@@ -13,6 +14,8 @@ const createPortfolio = async (data) => {
         `, values);
 
         console.log("portfolio data:", result.rows[0]);
+        
+        emitter.emit('createdPortfolio', result.rows[0]);
         return result.rows[0];
     } catch (error) {
         throw new Error(`Failed to create new portfolio: ${error.message}`);
