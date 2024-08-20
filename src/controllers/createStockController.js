@@ -1,6 +1,12 @@
 const emitter = require('../../lib/emitter');
 const { createStock } = require('../services/createStock');
 const { getStockByName } = require('../services/getStockByName');
+const yup = require('yup');
+
+const schema = yup.object().shape({
+    portfolio_id: yup.number().required(),
+    name: yup.string().min(3).required(),
+})
 
 const insertStock = async (req, res) => {
     try {
@@ -11,6 +17,8 @@ const insertStock = async (req, res) => {
             portfolio_id,
             name
         };
+
+        await schema.validateSync(constructedData);
 
         // check for existing record
         // return 409 if existed
