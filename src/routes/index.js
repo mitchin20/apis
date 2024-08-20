@@ -6,12 +6,14 @@ const { readData } = require('../controllers/readFileController');
 const { insertPortfolio } = require('../controllers/createPortfolioController');
 const { updatePortfolio } = require('../controllers/updatePortfolioController');
 const { removePortfolio } = require('../controllers/deletePortfolioController');
+const { insertStock } = require('../controllers/createStockController');
 
 router.get('/appointments', appointments);
 router.get('/readData', readData);
 router.get('/portfolios', portfolios);
 
 router.post('/portfolios', insertPortfolio);
+router.post('/portfolios/:portfolioId/stocks', insertStock);
 
 router.put('/portfolios/:id', updatePortfolio);
 
