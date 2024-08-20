@@ -1,18 +1,30 @@
 const emitter = require('../../lib/emitter');
 const { createStock } = require('../services/createStock');
+const { getStockByName } = require('../services/getStockByName');
 
 const insertStock = async (req, res) => {
     try {
         const portfolio_id = req.params.portfolioId;
-        const body = req.body;
+        const { name } = req.body;
 
         const constructedData = {
             portfolio_id,
-            ...body
+            name
         };
 
         // check for existing record
-        // return 404 if existed
+        // return 409 if existed
+        const existedRecord = await getStockByName(name);
+        if (existedRecord) {
+            const message = "Record already existed"
+            emitter.emit("createdStockError", message);
+            return res.status(409).json({
+                success: false,
+                data: existedRecord,
+                message,
+                error: null
+            })
+        }
 
         console.log("Constructed Data:", constructedData);
 
