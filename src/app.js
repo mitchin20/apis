@@ -5,6 +5,7 @@ const db = require("./db/database");
 require("./listeners/createPortfolioListener");
 require("./listeners/updatePortfolioListener");
 require("./listeners/deletePortfolioListener");
+require("./listeners/createStockListener");
 
 // Middleware
 app.use(express.json());
