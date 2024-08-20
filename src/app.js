@@ -4,6 +4,7 @@ const app = express();
 const db = require("./db/database");
 require("./listeners/createPortfolioListener");
 require("./listeners/updatePortfolioListener");
+require("./listeners/deletePortfolioListener");
 
 // Middleware
 app.use(express.json());
