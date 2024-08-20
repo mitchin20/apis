@@ -59,4 +59,39 @@ describe('removePortfolio Controller', () => {
             success: true
         }))
     });
+
+    it('should return 404 record not found', async () => {
+        getPortfolioById.mockResolvedValue(null);
+
+        await removePortfolio(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(404);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            success: false,
+            data: null,
+            message: `Record not found by ID: ${req.params.id}`,
+            error: null
+        }))
+    });
+
+    it('should return 500 when deletePortfolio service fails', async () => {
+        getPortfolioById.mockResolvedValue({
+            portfolio_id: 1,
+            name: "Financial Project 3",
+            updated_at: "2024-08-19T20:46:23.677Z",
+            created_at: "2024-08-19T20:46:23.677Z"
+        })
+
+        deletePortfolio.mockRejectedValue(new Error('Database connection error'));
+
+        await removePortfolio(req, res);
+
+        expect(res.status).toHaveBeenCalledWith(500);
+        expect(res.json).toHaveBeenCalledWith(expect.objectContaining({
+            success: false,
+            data: null,
+            message: "Failed to delete record",
+            error: "Database connection error"
+        }))
+    });
 });
