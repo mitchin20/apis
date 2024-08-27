@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { authenticateToken } = require('../middlewares/tokenMiddleware');
 const { appointments } = require('../controllers/appointmentController');
 const { readData } = require('../controllers/readFileController');
 const { portfolios } = require('../controllers/portfoliosController');
@@ -9,16 +10,16 @@ const { removePortfolio } = require('../controllers/deletePortfolioController');
 const { insertStock } = require('../controllers/createStockController');
 const { insertToken } = require('../controllers/createTokenController');
 
-router.get('/appointments', appointments);
-router.get('/readData', readData);
-router.get('/portfolios', portfolios);
+router.get('/appointments', authenticateToken, appointments);
+router.get('/readData', authenticateToken, readData);
+router.get('/portfolios', authenticateToken, portfolios);
 
-router.post('/portfolios', insertPortfolio);
-router.post('/portfolios/:portfolioId/stocks', insertStock);
-router.post('/tokens', insertToken);
+router.post('/portfolios', authenticateToken, insertPortfolio);
+router.post('/portfolios/:portfolioId/stocks', authenticateToken, insertStock);
+router.post('/tokens', authenticateToken, insertToken);
 
-router.put('/portfolios/:id', updatePortfolio);
+router.put('/portfolios/:id', authenticateToken, updatePortfolio);
 
-router.delete('/portfolios/:id', removePortfolio);
+router.delete('/portfolios/:id', authenticateToken, removePortfolio);
 
 module.exports = router;
