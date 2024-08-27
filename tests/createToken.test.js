@@ -1,9 +1,9 @@
 const { createToken } = require('../src/services/createToken');
-const { getTokenByClientName } = require('../src/services/getTokenByClientName');
+const { getTokenByClientNameOrId } = require('../src/services/getTokenByClientNameOrId');
 const { insertToken } = require('../src/controllers/createTokenController');
 
 jest.mock('../src/services/createToken');
-jest.mock('../src/services/getTokenByClientName');
+jest.mock('../src/services/getTokenByClientNameOrId');
 
 describe('insertToken Controller', () => {
     let req, res;
@@ -45,7 +45,7 @@ describe('insertToken Controller', () => {
             error: null
         });
 
-        getTokenByClientName.mockResolvedValue(null);
+        getTokenByClientNameOrId.mockResolvedValue(null);
 
         await insertToken(req, res);
 
@@ -62,7 +62,7 @@ describe('insertToken Controller', () => {
 
     it('should return 409 when client_name already existed', async () => {
         createToken.mockRejectedValue(null);
-        getTokenByClientName.mockResolvedValue(mockData);
+        getTokenByClientNameOrId.mockResolvedValue(mockData);
 
         await insertToken(req, res);
 

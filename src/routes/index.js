@@ -9,6 +9,7 @@ const { updatePortfolio } = require('../controllers/updatePortfolioController');
 const { removePortfolio } = require('../controllers/deletePortfolioController');
 const { insertStock } = require('../controllers/createStockController');
 const { insertToken } = require('../controllers/createTokenController');
+const { refreshClientToken } = require('../controllers/refreshTokenController');
 
 router.get('/appointments', authenticateToken, appointments);
 router.get('/readData', authenticateToken, readData);
@@ -16,9 +17,10 @@ router.get('/portfolios', authenticateToken, portfolios);
 
 router.post('/portfolios', authenticateToken, insertPortfolio);
 router.post('/portfolios/:portfolioId/stocks', authenticateToken, insertStock);
-router.post('/tokens', authenticateToken, insertToken);
+router.post('/tokens', insertToken);
 
 router.put('/portfolios/:id', authenticateToken, updatePortfolio);
+router.put('/refreshToken', refreshClientToken);
 
 router.delete('/portfolios/:id', authenticateToken, removePortfolio);
 

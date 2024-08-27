@@ -4,7 +4,7 @@ const yup = require('yup');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const { createToken } = require("../services/createToken");
-const { getTokenByClientName } = require("../services/getTokenByClientName");
+const { getTokenByClientNameOrId } = require("../services/getTokenByClientNameOrId");
 
 const SECRET_TOKEN_KEY = process.env.SECRET_TOKEN;
 
@@ -43,7 +43,11 @@ const insertToken = async (req, res) => {
 
         await schema.validateSync(restructuredData);
         
-        const existedToken = await getTokenByClientName(client_name);
+        const queryValues = {
+            client_id: null,
+            client_name
+        }
+        const existedToken = await getTokenByClientNameOrId(queryValues);
         if (existedToken) {
             const message = `Client already existed: ${client_name}`;
             emitter.emit('createdTokenError', message);
@@ -77,5 +81,3 @@ const insertToken = async (req, res) => {
 module.exports = {
     insertToken,
 }
-
-
