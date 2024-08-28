@@ -8,13 +8,24 @@ const SECRET_TOKEN_KEY = process.env.SECRET_TOKEN;
 const refreshClientToken = async (req, res) => {
     try {
         const { clientId } = req.query;
+
+        if (!clientId || typeof clientId !== 'string' || clientId.trim() === '') {
+            const message = `Invalid client_id: ${clientId}`;
+            emitter.emit('RefreshTokenError', message);
+            return res.status(400).json({
+                success: false,
+                data: null,
+                message,
+                error: null
+            })
+        }
+        
         const queryValues = {
             client_id: clientId,
             client_name: null
         }
         const existedClient = await getTokenByClientNameOrId(queryValues);
-        const {id, updated_at, created_at, token, ...client } = existedClient;
-
+        
         if (!existedClient) {
             const message = `Client not existed: ${clientId}`;
             emitter.emit('RefreshTokenError', message);
@@ -25,6 +36,7 @@ const refreshClientToken = async (req, res) => {
                 error: null
             })
         }
+        const {id, updated_at, created_at, token, ...client } = existedClient;
 
         const payload = { ...client }
         const refreshedToken = jwt.sign(payload, SECRET_TOKEN_KEY, { expiresIn: '1h' });
